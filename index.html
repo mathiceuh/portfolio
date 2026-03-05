@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio dynamique de Mathis Lefevre">
+    <title>Portfolio | mathiceuh</title>
+
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --bg-card: #161b22;
+            --bg-card-hover: #21262d;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent-color: #58a6ff;
+            --border-color: #30363d;
+            --skeleton-bg: #21262d;
+            --skeleton-shimmer: #30363d;
+
+            --border-radius-lg: 12px;
+            --border-radius-sm: 6px;
+            --transition-speed: 0.3s;
+            --max-width: 1000px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        .skeleton {
+            background: var(--skeleton-bg);
+            background-image: linear-gradient(90deg,
+                    var(--skeleton-bg) 0px,
+                    var(--skeleton-shimmer) 40px,
+                    var(--skeleton-bg) 80px);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite linear;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .skeleton-text {
+            height: 1em;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .skeleton-text.short {
+            width: 40%;
+        }
+
+        .skeleton-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+        }
+
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .avatar-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--border-color);
+            object-fit: cover;
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .avatar:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-color);
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .bio {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .badges {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        .badge svg {
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+            fill: currentColor;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition-speed) ease, border-color var(--transition-speed) ease;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .card-title a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .card-title a:hover {
+            text-decoration: underline;
+        }
+
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+        }
+
+        .stat svg {
+            width: 14px;
+            height: 14px;
+            margin-right: 4px;
+            fill: currentColor;
+        }
+
+        .lang-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+
+        .languages-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 4rem;
+        }
+
+        .lang-tag {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+            color: var(--text-muted);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links a {
+            color: var(--text-main);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--border-radius-sm);
+            transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        .social-links a:hover {
+            background: var(--bg-card-hover);
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .pulsing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #2ea043;
+            border-radius: 50%;
+            margin-right: 6px;
+            box-shadow: 0 0 0 0 rgba(46, 160, 67, 0.7);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(46, 160, 67, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(46, 160, 67, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(46, 160, 67, 0);
+            }
+        }
+
+        .error-message {
+            background: rgba(248, 81, 73, 0.1);
+            border: 1px solid rgba(248, 81, 73, 0.4);
+            color: #ff7b72;
+            padding: 1rem;
+            border-radius: var(--border-radius-sm);
+            text-align: center;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .social-links {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div id="error-container" class="error-message fade-in">
+            <p>Impossible de charger les données pour le moment. Veuillez réessayer plus tard.</p>
+        </div>
+
+        <section class="hero fade-in">
+            <div class="avatar-container">
+                <div id="avatar-skeleton" class="skeleton skeleton-circle"></div>
+            </div>
+
+            <h1 id="user-name">
+                <div class="skeleton skeleton-text" style="width: 200px; height: 1.5em; margin: 0 auto;"></div>
+            </h1>
+            <div id="user-bio" class="bio">
+                <div class="skeleton skeleton-text"></div>
+                <div class="skeleton skeleton-text short" style="margin: 0 auto;"></div>
+            </div>
+
+            <div id="badges-container" class="badges">
+            </div>
+        </section>
+
+        <section class="fade-in delay-1">
+            <h2 class="section-title">Projets récents</h2>
+            <div id="projects-grid" class="projects-grid">
+                <div class="card skeleton-card">
+                    <div class="skeleton skeleton-text"></div>
+                    <div class="skeleton skeleton-text" style="margin-top: 1rem; height: 3rem;"></div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <div class="skeleton skeleton-text short"></div>
+                        <div class="skeleton skeleton-text short"></div>
+                    </div>
+                </div>
+                <div class="card skeleton-card">
+                    <div class="skeleton skeleton-text"></div>
+                    <div class="skeleton skeleton-text" style="margin-top: 1rem; height: 3rem;"></div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <div class="skeleton skeleton-text short"></div>
+                        <div class="skeleton skeleton-text short"></div>
+                    </div>
+                </div>
+                <div class="card skeleton-card">
+                    <div class="skeleton skeleton-text"></div>
+                    <div class="skeleton skeleton-text" style="margin-top: 1rem; height: 3rem;"></div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <div class="skeleton skeleton-text short"></div>
+                        <div class="skeleton skeleton-text short"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="fade-in delay-2">
+            <h2 class="section-title">Langages dominants</h2>
+            <div id="languages-container" class="languages-container">
+                <div class="skeleton skeleton-text short" style="height: 2.5rem; border-radius: 20px;"></div>
+                <div class="skeleton skeleton-text" style="width: 30%; height: 2.5rem; border-radius: 20px;"></div>
+            </div>
+        </section>
+
+        <footer class="footer fade-in delay-2">
+            <div class="social-links" id="social-links">
+                <a href="https://github.com/mathiceuh" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://www.linkedin.com/in/mathis-lefèvre-174744364/" target="_blank"
+                    rel="noopener noreferrer">LinkedIn</a>
+            </div>
+
+            <div class="live-indicator">
+                <span class="pulsing-dot"></span>
+                <span>Données synchronisées en temps réel depuis GitHub</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <svg style="display: none;">
+        <symbol id="icon-repo" viewBox="0 0 16 16">
+            <path
+                d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z">
+            </path>
+        </symbol>
+        <symbol id="icon-star" viewBox="0 0 16 16">
+            <path
+                d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25zm0 2.445L6.615 5.5a.75.75 0 01-.564.41l-3.097.45 2.24 2.184a.75.75 0 01.216.664l-.528 3.084 2.769-1.456a.75.75 0 01.698 0l2.77 1.456-.53-3.084a.75.75 0 01.216-.664l2.24-2.183-3.096-.45a.75.75 0 01-.564-.41L8 2.694v.001z">
+            </path>
+        </symbol>
+        <symbol id="icon-fork" viewBox="0 0 16 16">
+            <path
+                d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-.878a2.25 2.25 0 111.5 0v.878a2.25 2.25 0 01-2.25 2.25h-1.5v2.128a2.251 2.251 0 11-1.5 0V8.5h-1.5A2.25 2.25 0 013.5 6.25v-.878a2.25 2.25 0 111.5 0ZM5 3.25a.75.75 0 10-1.5 0 .75.75 0 001.5 0Zm6.75.75a.75.75 0 100-1.5.75.75 0 000 1.5Zm-3 8.75a.75.75 0 10-1.5 0 .75.75 0 001.5 0Z">
+            </path>
+        </symbol>
+        <symbol id="icon-location" viewBox="0 0 16 16">
+            <path
+                d="M11.536 3.464a5 5 0 010 7.072L8 14.07l-3.536-3.535a5 5 0 117.072-7.072v.001zm1.06 8.132a6.5 6.5 0 10-9.192 0l3.535 3.536a1.5 1.5 0 002.122 0l3.535-3.536zM8 9a2 2 0 100-4 2 2 0 000 4z">
+            </path>
+        </symbol>
+        <symbol id="icon-users" viewBox="0 0 16 16">
+            <path
+                d="M3.15 4.25c0-.855.695-1.5 1.5-1.5h6.7c.805 0 1.5.645 1.5 1.5v6.5c0 .855-.695 1.5-1.5 1.5h-6.7c-.805 0-1.5-.645-1.5-1.5v-6.5zm7.36 1.838A3.486 3.486 0 008 5a3.486 3.486 0 00-2.51 1.088c-.628.66-1.026 1.571-1.026 2.508 0 .937.398 1.848 1.026 2.508A3.486 3.486 0 008 12.19c1.024 0 1.956-.442 2.51-1.088.628-.66 1.026-1.571 1.026-2.508 0-.937-.398-1.848-1.026-2.508zM8 6.5a2.008 2.008 0 011.41.603c.365.385.618.94.618 1.493 0 .553-.253 1.108-.618 1.493A2.008 2.008 0 018 10.69c-.8 0-1.523-.34-1.921-.758C5.692 9.479 5.5 8.852 5.5 8.19c0-.662.192-1.289.579-1.742C6.477 6.84 7.2 6.5 8 6.5z">
+            </path>
+        </symbol>
+        <symbol id="icon-twitter" viewBox="0 0 16 16">
+            <path
+                d="M16 3.538a6.46 6.46 0 01-1.884.516 3.3 3.3 0 001.444-1.816 6.607 6.607 0 01-2.084.797 3.284 3.284 0 00-5.592 2.992 9.317 9.317 0 01-6.76-3.428 3.284 3.284 0 001.018 4.381A3.266 3.266 0 01.656 6.55v.041a3.285 3.285 0 002.633 3.218 3.283 3.283 0 01-1.482.056 3.288 3.288 0 003.065 2.279 6.592 6.592 0 01-4.88 1.365 9.284 9.284 0 005.032 1.474c6.037 0 9.338-5.002 9.338-9.338 0-.142-.003-.284-.01-.425A6.67 6.67 0 0016 3.538z">
+            </path>
+        </symbol>
+    </svg>
+
+    <script>
+        const GITHUB_USERNAME = 'mathiceuh';
+
+        const languageColors = {
+            'JavaScript': '#f1e05a',
+            'TypeScript': '#3178c6',
+            'Python': '#3572A5',
+            'HTML': '#e34c26',
+            'CSS': '#563d7c',
+            'Java': '#b07219',
+            'C++': '#f34b7d',
+            'C#': '#178600',
+            'PHP': '#4F5D95',
+            'Ruby': '#701516',
+            'Go': '#00ADD8',
+            'Rust': '#dea584',
+            'Shell': '#89e051',
+            'Vue': '#41b883',
+            'React': '#61dafb'
+        };
+
+        function getLangColor(lang) {
+            return languageColors[lang] || '#cccccc';
+        }
+
+        async function fetchGitHubData() {
+            try {
+                const [profileRes, reposRes] = await Promise.all([
+                    fetch(`https://api.github.com/users/${GITHUB_USERNAME}`),
+                    fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=6`)
+                ]);
+
+                if (!profileRes.ok || !reposRes.ok) {
+                    throw new Error('API GitHub indisponible ou limite atteinte.');
+                }
+
+                const profile = await profileRes.json();
+                const repos = await reposRes.json();
+
+                renderProfile(profile);
+                renderRepos(repos);
+                renderLanguages(repos);
+
+            } catch (error) {
+                console.error('Erreur lors de la récupération des données GitHub:', error);
+                document.getElementById('error-container').style.display = 'block';
+            }
+        }
+
+        function renderProfile(profile) {
+            const avatarContainer = document.querySelector('.avatar-container');
+            const img = document.createElement('img');
+            img.src = profile.avatar_url;
+            img.alt = `Avatar de ${profile.login}`;
+            img.className = 'avatar';
+
+            document.getElementById('avatar-skeleton').remove();
+            avatarContainer.appendChild(img);
+
+            const nameEl = document.getElementById('user-name');
+            nameEl.textContent = profile.name || profile.login;
+
+            const bioEl = document.getElementById('user-bio');
+            bioEl.textContent = profile.bio || "Développeur passionné sur GitHub.";
+
+            const badgesContainer = document.getElementById('badges-container');
+            badgesContainer.innerHTML = '';
+
+            if (profile.location) {
+                appendBadge(badgesContainer, 'icon-location', profile.location);
+            }
+            appendBadge(badgesContainer, 'icon-users', `${profile.followers} abonnés`);
+            appendBadge(badgesContainer, 'icon-repo', `${profile.public_repos} repos`);
+
+            if (profile.twitter_username) {
+                const socialLinks = document.getElementById('social-links');
+                const twitterLink = document.createElement('a');
+                twitterLink.href = `https://twitter.com/${profile.twitter_username}`;
+                twitterLink.target = "_blank";
+                twitterLink.rel = "noopener noreferrer";
+                twitterLink.textContent = "Twitter / X";
+                socialLinks.insertBefore(twitterLink, socialLinks.children[1]);
+            }
+        }
+
+        function appendBadge(container, iconId, text) {
+            const badge = document.createElement('div');
+            badge.className = 'badge';
+
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+            use.setAttributeNS('http://www.w3.org/1999/xlink', 'href', `#${iconId}`);
+            svg.appendChild(use);
+
+            const span = document.createElement('span');
+            span.textContent = text;
+
+            badge.appendChild(svg);
+            badge.appendChild(span);
+            container.appendChild(badge);
+        }
+
+        function renderRepos(repos) {
+            const grid = document.getElementById('projects-grid');
+            grid.innerHTML = '';
+
+            if (repos.length === 0) {
+                grid.textContent = "Aucun dépôt public pour le moment.";
+                return;
+            }
+
+            repos.forEach(repo => {
+                const card = document.createElement('article');
+                card.className = 'card';
+
+                const titleHeading = document.createElement('h3');
+                titleHeading.className = 'card-title';
+                const titleLink = document.createElement('a');
+                titleLink.href = repo.html_url;
+                titleLink.target = "_blank";
+                titleLink.rel = "noopener noreferrer";
+                titleLink.textContent = repo.name;
+                titleHeading.appendChild(titleLink);
+
+                const descP = document.createElement('p');
+                descP.className = 'card-desc';
+                descP.textContent = repo.description || "Aucune description fournie.";
+
+                const footer = document.createElement('div');
+                footer.className = 'card-footer';
+
+                if (repo.language) {
+                    const langDiv = document.createElement('div');
+                    langDiv.className = 'stat';
+                    const dot = document.createElement('span');
+                    dot.className = 'lang-dot';
+                    dot.style.backgroundColor = getLangColor(repo.language);
+                    const langText = document.createElement('span');
+                    langText.textContent = repo.language;
+                    langDiv.appendChild(dot);
+                    langDiv.appendChild(langText);
+                    footer.appendChild(langDiv);
+                }
+
+                if (repo.stargazers_count > 0) {
+                    const starDiv = document.createElement('div');
+                    starDiv.className = 'stat';
+                    starDiv.innerHTML = `<svg><use href="#icon-star"></use></svg> <span>${repo.stargazers_count}</span>`;
+                    footer.appendChild(starDiv);
+                }
+
+                if (repo.forks_count > 0) {
+                    const forkDiv = document.createElement('div');
+                    forkDiv.className = 'stat';
+                    forkDiv.innerHTML = `<svg><use href="#icon-fork"></use></svg> <span>${repo.forks_count}</span>`;
+                    footer.appendChild(forkDiv);
+                }
+
+                card.appendChild(titleHeading);
+                card.appendChild(descP);
+                card.appendChild(footer);
+                grid.appendChild(card);
+            });
+        }
+
+        function renderLanguages(repos) {
+            const container = document.getElementById('languages-container');
+            container.innerHTML = '';
+
+            const languagesSet = new Set();
+            repos.forEach(repo => {
+                if (repo.language) languagesSet.add(repo.language);
+            });
+
+            if (languagesSet.size === 0) {
+                container.textContent = "Aucun langage détecté dans les dépôts récents.";
+                return;
+            }
+
+            languagesSet.forEach(lang => {
+                const tag = document.createElement('div');
+                tag.className = 'lang-tag';
+
+                const dot = document.createElement('span');
+                dot.className = 'lang-dot';
+                dot.style.backgroundColor = getLangColor(lang);
+
+                const text = document.createElement('span');
+                text.textContent = lang;
+
+                tag.appendChild(dot);
+                tag.appendChild(text);
+                container.appendChild(tag);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchGitHubData);
+    </script>
+</body>
+
+</html>
