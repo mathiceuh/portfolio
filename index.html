@@ -130,7 +130,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: 2rem;
         }
 
         .avatar-container {
@@ -236,7 +236,6 @@
         .card-title a:hover {
             text-decoration: underline;
         }
-
 
         .card-desc {
             color: var(--text-muted);
@@ -510,69 +509,6 @@
             border-color: var(--accent-color);
         }
 
-        /* --- NOUVEAUX STYLES : MODALE DE CONTACT --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(13, 17, 23, 0.85);
-            /* Fond assombri */
-            backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity var(--transition-speed) ease;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .modal-content {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-lg);
-            width: 90%;
-            max-width: 500px;
-            padding: 2rem;
-            position: relative;
-            transform: translateY(20px);
-            transition: transform var(--transition-speed) ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-overlay.active .modal-content {
-            transform: translateY(0);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 5px;
-            transition: color var(--transition-speed) ease;
-        }
-
-        .modal-close:hover {
-            color: var(--text-main);
-        }
-
-        .modal-close svg {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
-        }
-
         .contact-form {
             display: flex;
             flex-direction: column;
@@ -652,6 +588,63 @@
             transform: scale(1.1);
         }
 
+        .tab-bar {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            position: relative;
+            transition: color var(--transition-speed) ease;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .contact-section {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .contact-section h2 {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .contact-section p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
         @media (max-width: 600px) {
             .hero h1 {
                 font-size: 1.8rem;
@@ -664,6 +657,11 @@
             .social-links {
                 flex-direction: column;
                 gap: 0.8rem;
+            }
+
+            .tab-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -716,119 +714,160 @@
                     </svg>
                     <span data-i18n="cv_btn">Télécharger mon CV</span>
                 </a>
-                <button id="contact-btn" class="btn btn-secondary">
-                    <svg>
-                        <use href="#icon-mail"></use>
-                    </svg>
-                    <span data-i18n="contact_btn">Me contacter</span>
-                </button>
             </div>
 
             <div id="badges-container" class="badges">
             </div>
         </section>
 
-        <section class="fade-in delay-1">
-            <h2 class="section-title" data-i18n="recent_projects">Projets récents</h2>
-            <div id="projects-grid" class="projects-grid">
-                <div class="card skeleton-card">
-                    <div class="skeleton skeleton-text"></div>
-                    <div class="skeleton skeleton-text" style="margin-top: 1rem; height: 3rem;"></div>
-                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-                        <div class="skeleton skeleton-text short"></div>
-                        <div class="skeleton skeleton-text short"></div>
-                    </div>
-                </div>
-                <div class="card skeleton-card">
-                    <div class="skeleton skeleton-text"></div>
-                    <div class="skeleton skeleton-text" style="margin-top: 1rem; height: 3rem;"></div>
-                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-                        <div class="skeleton skeleton-text short"></div>
-                        <div class="skeleton skeleton-text short"></div>
-                    </div>
-                </div>
-                <div class="card skeleton-card">
-                    <div class="skeleton skeleton-text"></div>
-                    <div class="skeleton skeleton-text" style="margin-top: 1rem; height: 3rem;"></div>
-                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-                        <div class="skeleton skeleton-text short"></div>
-                        <div class="skeleton skeleton-text short"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <div class="tab-bar fade-in delay-1">
+            <button class="tab-btn active" onclick="switchTab('tab-about')" data-i18n="tab_about">À propos</button>
+            <button class="tab-btn" onclick="switchTab('tab-projects')" data-i18n="tab_projects">Projets</button>
+            <button class="tab-btn" onclick="switchTab('tab-contact')" data-i18n="tab_contact">Contact</button>
+        </div>
 
-        <section class="fade-in delay-2">
-            <h2 class="section-title" data-i18n="hobbies">Loisirs</h2>
-            <div class="projects-grid" style="margin-bottom: 2rem;">
-                <article class="card">
-                    <h3 class="card-title" data-i18n="sports_title">⚽ Sports collectifs</h3>
-                    <p class="card-desc" data-i18n="sports_desc">J'aime collaborer en équipe pour aller chercher la
-                        victoire, avec une certaine
-                        préférence pour le football.</p>
-                </article>
-                <article class="card">
-                    <h3 class="card-title" data-i18n="games_title">🎮 Jeux vidéo</h3>
-                    <p class="card-desc" data-i18n="games_desc">Je suis un grand fan de jeux compétitifs, notamment de
-                        titres comme League of
-                        Legends ou Counter-Strike.</p>
-                </article>
-                <article class="card">
-                    <h3 class="card-title" data-i18n="movies_title">🎬 Musique & Cinéma</h3>
-                    <p class="card-desc" data-i18n="movies_desc">J'aime aussi la musique et le cinéma, en particulier
-                        les films assez
-                        psychologiques comme <em>Shutter Island</em>.</p>
-                </article>
-            </div>
-        </section>
+        <div id="tab-about" class="tab-panel active fade-in delay-2">
 
-        <section class="fade-in delay-2">
-            <h2 class="section-title" data-i18n="education">Parcours</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-date">2025 - Actuel</div>
-                    <h3 class="timeline-title" data-i18n="master_title">Master Informatique (e-Services)</h3>
-                    <div class="timeline-subtitle">Université de Lille</div>
-                    <div class="timeline-desc" data-i18n="master_desc">
-                        Approfondissement en ingénierie logicielle, architecture des services web avancés et gestion de
-                        projet informatique.
-                    </div>
+            <section>
+                <h2 class="section-title" data-i18n="hobbies">Loisirs</h2>
+                <div class="projects-grid" style="margin-bottom: 2rem;">
+                    <article class="card">
+                        <h3 class="card-title" data-i18n="sports_title">⚽ Sports collectifs</h3>
+                        <p class="card-desc" data-i18n="sports_desc">J'aime collaborer en équipe pour aller chercher la victoire, avec une certaine préférence pour le football.</p>
+                    </article>
+                    <article class="card">
+                        <h3 class="card-title" data-i18n="games_title">🎮 Jeux vidéo</h3>
+                        <p class="card-desc" data-i18n="games_desc">Je suis un grand fan de jeux compétitifs, notamment de titres comme League of Legends ou Counter-Strike.</p>
+                    </article>
+                    <article class="card">
+                        <h3 class="card-title" data-i18n="movies_title">🎬 Musique &amp; Cinéma</h3>
+                        <p class="card-desc" data-i18n="movies_desc">J'aime aussi la musique et le cinéma, en particulier les films assez psychologiques comme <em>Shutter Island</em>.</p>
+                    </article>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-date">2022 - 2025</div>
-                    <h3 class="timeline-title" data-i18n="licence_title">Licence Informatique</h3>
-                    <div class="timeline-subtitle">Université de Valenciennes (UPHF)</div>
-                    <div class="timeline-desc" data-i18n="licence_desc">
-                        Acquisition des fondamentaux en développement, algorithmique, base de données et architectures
-                        logicielles.
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-date">2022</div>
-                    <h3 class="timeline-title" data-i18n="bac_title">Baccalauréat Général (Spécialités Maths,
-                        Physique-Chimie)</h3>
-                    <div class="timeline-subtitle">Institut d'Anchin, Pecquencourt</div>
-                    <div class="timeline-desc" data-i18n="bac_desc">
-                        Obtention du baccalauréat avec la mention Assez Bien.
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="fade-in delay-2">
-            <h2 class="section-title" data-i18n="languages">Langages dominants</h2>
-            <div id="languages-container" class="languages-container">
-                <div class="skeleton skeleton-text short" style="height: 2.5rem; border-radius: 20px;"></div>
-                <div class="skeleton skeleton-text" style="width: 30%; height: 2.5rem; border-radius: 20px;"></div>
+            <section>
+                <h2 class="section-title" data-i18n="education">Parcours</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">2025 - Actuel</div>
+                        <h3 class="timeline-title" data-i18n="master_title">Master Informatique (e-Services)</h3>
+                        <div class="timeline-subtitle">Université de Lille</div>
+                        <div class="timeline-desc" data-i18n="master_desc">
+                            Approfondissement en ingénierie logicielle, architecture des services web avancés et gestion de projet informatique.
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">2025</div>
+                        <h3 class="timeline-title" data-i18n="stage_title">Stage en Cybersécurité</h3>
+                        <div class="timeline-subtitle">Saint-Gobain</div>
+                        <div class="timeline-desc" data-i18n="stage_desc">
+                            Stage axé sur la sécurité des systèmes d'information au sein du groupe Saint-Gobain.
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">2022 - 2025</div>
+                        <h3 class="timeline-title" data-i18n="licence_title">Licence Informatique</h3>
+                        <div class="timeline-subtitle">Université de Valenciennes (UPHF)</div>
+                        <div class="timeline-desc" data-i18n="licence_desc">
+                            Acquisition des fondamentaux en développement, algorithmique, base de données et architectures logicielles.
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">2022</div>
+                        <h3 class="timeline-title" data-i18n="bac_title">Baccalauréat Général (Spécialités Maths, Physique-Chimie)</h3>
+                        <div class="timeline-subtitle">Institut d'Anchin, Pecquencourt</div>
+                        <div class="timeline-desc" data-i18n="bac_desc">
+                            Obtention du baccalauréat avec la mention Assez Bien.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title" data-i18n="languages">Langages dominants</h2>
+                <div id="languages-container" class="languages-container">
+                    <div class="skeleton skeleton-text short" style="height: 2.5rem; border-radius: 20px;"></div>
+                    <div class="skeleton skeleton-text" style="width: 30%; height: 2.5rem; border-radius: 20px;"></div>
+                </div>
+            </section>
+
+        </div>
+
+        <div id="tab-projects" class="tab-panel">
+
+            <section>
+                <h2 class="section-title" data-i18n="recent_projects">Projets récents</h2>
+                <div id="projects-grid" class="projects-grid">
+                    <div class="card skeleton-card">
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text" style="margin-top: 1rem; height: 3rem;"></div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                            <div class="skeleton skeleton-text short"></div>
+                            <div class="skeleton skeleton-text short"></div>
+                        </div>
+                    </div>
+                    <div class="card skeleton-card">
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text" style="margin-top: 1rem; height: 3rem;"></div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                            <div class="skeleton skeleton-text short"></div>
+                            <div class="skeleton skeleton-text short"></div>
+                        </div>
+                    </div>
+                    <div class="card skeleton-card">
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text" style="margin-top: 1rem; height: 3rem;"></div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                            <div class="skeleton skeleton-text short"></div>
+                            <div class="skeleton skeleton-text short"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <div id="tab-contact" class="tab-panel">
+
+            <div class="contact-section">
+                <h2 data-i18n="modal_title">Me contacter</h2>
+                <p data-i18n="modal_desc">Envoyez-moi un message via ce formulaire !</p>
+
+                <form action="https://formspree.io/f/mvzwopwb" method="POST" class="contact-form">
+                    <div>
+                        <label for="name" class="form-label" data-i18n="label_name">Votre Nom</label>
+                        <input type="text" id="name" name="name" class="form-input" required placeholder="Jean Dupont"
+                            data-i18n-ph="ph_name">
+                    </div>
+
+                    <div>
+                        <label for="email" class="form-label" data-i18n="label_email">Votre Email</label>
+                        <input type="email" id="email" name="_replyto" class="form-input" required
+                            placeholder="jean@exemple.com" data-i18n-ph="ph_email">
+                    </div>
+
+                    <div>
+                        <label for="message" class="form-label" data-i18n="label_message">Votre Message</label>
+                        <textarea id="message" name="message" class="form-textarea" required
+                            placeholder="Bonjour Mathis, je vous contacte pour..." data-i18n-ph="ph_message"></textarea>
+                    </div>
+
+                    <input type="hidden" name="_language" value="fr" />
+
+                    <button type="submit" class="btn btn-primary form-submit">
+                        <span data-i18n="submit_btn">Envoyer le message</span>
+                    </button>
+                </form>
             </div>
-        </section>
+
+        </div>
 
         <footer class="footer fade-in delay-2">
-
-
             <div class="live-indicator">
                 <span class="pulsing-dot"></span>
                 <span data-i18n="footer_sync">Données synchronisées en temps réel depuis GitHub</span>
@@ -838,10 +877,6 @@
     </div>
 
     <svg style="display: none;">
-        <symbol id="icon-close" viewBox="0 0 24 24">
-            <path
-                d="M24 2.417L21.583 0 12 9.583 2.417 0 0 2.417 9.583 12 0 21.583 2.417 24 12 14.417 21.583 24 24 21.583 14.417 12z" />
-        </symbol>
         <symbol id="icon-repo" viewBox="0 0 16 16">
             <path
                 d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z">
@@ -892,47 +927,6 @@
         </symbol>
     </svg>
 
-    <div id="contact-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close" id="close-modal-btn" aria-label="Fermer">
-                <svg>
-                    <use href="#icon-close"></use>
-                </svg>
-            </button>
-            <h2 style="color: white; margin-bottom: 0.5rem; font-size: 1.5rem;" data-i18n="modal_title">Me contacter
-            </h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem;" data-i18n="modal_desc">
-                Envoyez-moi un message via ce formulaire !
-            </p>
-
-            <form action="https://formspree.io/f/mvzwopwb" method="POST" class="contact-form">
-                <div>
-                    <label for="name" class="form-label" data-i18n="label_name">Votre Nom</label>
-                    <input type="text" id="name" name="name" class="form-input" required placeholder="Jean Dupont"
-                        data-i18n="ph_name">
-                </div>
-
-                <div>
-                    <label for="email" class="form-label" data-i18n="label_email">Votre Email</label>
-                    <input type="email" id="email" name="_replyto" class="form-input" required
-                        placeholder="jean@exemple.com" data-i18n="ph_email">
-                </div>
-
-                <div>
-                    <label for="message" class="form-label" data-i18n="label_message">Votre Message</label>
-                    <textarea id="message" name="message" class="form-textarea" required
-                        placeholder="Bonjour Mathis, je vous contacte pour..." data-i18n="ph_message"></textarea>
-                </div>
-
-                <input type="hidden" name="_language" value="fr" />
-
-                <button type="submit" class="btn btn-primary form-submit">
-                    <span data-i18n="submit_btn">Envoyer le message</span>
-                </button>
-            </form>
-        </div>
-    </div>
-
     <script>
         const GITHUB_USERNAME = 'mathiceuh';
 
@@ -956,6 +950,16 @@
 
         function getLangColor(lang) {
             return languageColors[lang] || '#cccccc';
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            const btns = document.querySelectorAll('.tab-btn');
+            if (tabId === 'tab-about') btns[0].classList.add('active');
+            if (tabId === 'tab-projects') btns[1].classList.add('active');
+            if (tabId === 'tab-contact') btns[2].classList.add('active');
         }
 
         async function fetchGitHubData() {
@@ -1001,7 +1005,7 @@
 
             if (profile.location) appendBadge(badgesContainer, 'icon-location', profile.location);
             appendBadge(badgesContainer, 'icon-users', `<span>${profile.followers}</span> <span data-i18n="followers">abonnés</span>`);
-            appendBadge(badgesContainer, 'icon-repo', `<span>${profile.public_repos}</span> <span data-i18n="repos">repos</span>`);
+            appendBadge(badgesContainer, 'icon-repo', `<span>${profile.public_repos}</span> <span data-i18n="repos">dépôts publics</span>`);
 
             if (profile.twitter_username) {
                 const socialLinks = document.getElementById('social-links');
@@ -1112,47 +1116,33 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             fetchGitHubData();
-
-            const modal = document.getElementById('contact-modal');
-            const openBtn = document.getElementById('contact-btn');
-            const closeBtn = document.getElementById('close-modal-btn');
-
-            openBtn.addEventListener('click', () => {
-                modal.classList.add('active');
-            });
-
-            closeBtn.addEventListener('click', () => {
-                modal.classList.remove('active');
-            });
-
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                }
-            });
         });
 
         const translations = {
             fr: {
                 error_msg: "Impossible de charger les données pour le moment. Veuillez réessayer plus tard.",
                 cv_btn: "Télécharger mon CV",
-                contact_btn: "Me contacter",
+                tab_about: "À propos",
+                tab_projects: "Projets",
+                tab_contact: "Contact",
                 recent_projects: "Projets récents",
                 education: "Parcours",
                 master_title: "Master Informatique (e-Services)",
-                master_desc: "Approfondissement en ingénierie logicielle, architecture des services web avancés et gestion de\n                        projet informatique.",
+                master_desc: "Approfondissement en ingénierie logicielle, architecture des services web avancés et gestion de projet informatique.",
+                stage_title: "Stage en Cybersécurité",
+                stage_desc: "Stage axé sur la sécurité des systèmes d'information au sein du groupe Saint-Gobain.",
                 licence_title: "Licence Informatique",
-                licence_desc: "Acquisition des fondamentaux en développement, algorithmique, base de données et architectures\n                        logicielles.",
+                licence_desc: "Acquisition des fondamentaux en développement, algorithmique, base de données et architectures logicielles.",
                 bac_title: "Baccalauréat Général (Spécialités Maths, Physique-Chimie)",
                 bac_desc: "Obtention du baccalauréat avec la mention Assez Bien.",
                 languages: "Langages dominants",
                 hobbies: "Loisirs",
                 sports_title: "⚽ Sports collectifs",
-                sports_desc: "J'aime collaborer en équipe pour aller chercher la victoire, avec une certaine\n                        préférence pour le football.",
+                sports_desc: "J'aime collaborer en équipe pour aller chercher la victoire, avec une certaine préférence pour le football.",
                 games_title: "🎮 Jeux vidéo",
-                games_desc: "Je suis un grand fan de jeux compétitifs, notamment de titres comme League of\n                        Legends ou Counter-Strike.",
+                games_desc: "Je suis un grand fan de jeux compétitifs, notamment de titres comme League of Legends ou Counter-Strike.",
                 movies_title: "🎬 Musique & Cinéma",
-                movies_desc: "J'aime aussi la musique et le cinéma, en particulier les films assez\n                        psychologiques comme <em>Shutter Island</em>.",
+                movies_desc: "J'aime aussi la musique et le cinéma, en particulier les films assez psychologiques comme <em>Shutter Island</em>.",
                 footer_sync: "Données synchronisées en temps réel depuis GitHub",
                 modal_title: "Me contacter",
                 modal_desc: "Envoyez-moi un message via ce formulaire !",
@@ -1172,11 +1162,15 @@
             en: {
                 error_msg: "Unable to load data right now. Please try again later.",
                 cv_btn: "Download my Resume",
-                contact_btn: "Contact me",
+                tab_about: "About Me",
+                tab_projects: "Projects",
+                tab_contact: "Contact",
                 recent_projects: "Recent Projects",
                 education: "Education",
                 master_title: "Master's in Computer Science (e-Services)",
                 master_desc: "Advanced studies in software engineering, web services architecture, and IT project management.",
+                stage_title: "Cybersecurity Internship",
+                stage_desc: "Internship focused on information systems security within the Saint-Gobain group.",
                 licence_title: "Bachelor's in Computer Science",
                 licence_desc: "Fundamentals of software development, algorithms, databases, and software architectures.",
                 bac_title: "High School Diploma (Majors in Math, Physics-Chemistry)",
@@ -1216,11 +1210,14 @@
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[lang][key]) {
-                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                        el.placeholder = translations[lang][key];
-                    } else {
-                        el.innerHTML = translations[lang][key];
-                    }
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+                const key = el.getAttribute('data-i18n-ph');
+                if (translations[lang][key]) {
+                    el.placeholder = translations[lang][key];
                 }
             });
         }
